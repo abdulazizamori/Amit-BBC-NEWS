@@ -1,4 +1,5 @@
 import 'package:amitfluttertasknewsui/control/data/online/dio.dart';
+import 'package:amitfluttertasknewsui/control/data/online/repo.dart';
 import 'package:amitfluttertasknewsui/model/NewsModel.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -9,26 +10,24 @@ import '../data/online/endpoints.dart';
 part 'bbc_state.dart';
 
 class BbcCubit extends Cubit<BbcState> {
-  final DioHelper dioHelper;
-   BBCModel? bbcModel;
-  BbcCubit({required this.dioHelper}) : super(BbcInitial());
+  BBCModel? bbcModel;
+  final Repository repository;
 
-  Future<Future<Response>?>getBbcNews()async{
-    try{
-      return dioHelper?.getData(url: '$newsBBcList=$apiKey').then((value){
-        print(value);
-        if(value.data != null){
-          print(value.data);
+  BbcCubit(this.repository) : super(BbcInitial());
+
+  Future<void>? getBbcNews() async {
+    try {
+      return repository.getNewData().then((value) {
+        if (value!.data != null) {
           bbcModel = BBCModel.fromJson(value.data);
           emit(BbcLoaded());
         }
       });
-
-    }catch(e){
-      print('BBC Error =======> $e');
     }
 
+
+    catch (e) {
+      print('BBC Error =======> $e');
+    }
   }
-
-
 }

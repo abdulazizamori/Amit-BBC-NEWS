@@ -1,3 +1,4 @@
+import 'package:amitfluttertasknewsui/control/data/online/repo.dart';
 import 'package:amitfluttertasknewsui/control/logic/bbc_cubit.dart';
 import 'package:amitfluttertasknewsui/model/NewsModel.dart';
 import 'package:amitfluttertasknewsui/view/screens/home-screen.dart';
@@ -6,9 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'control/constants/di.dart';
 import 'control/data/online/dio.dart';
 
-void main() {
+void main() async{
+  await init();
   runApp(MyApp());
 }
 
@@ -20,10 +23,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final dioHelper = DioImplementation();
 
   @override
   Widget build(BuildContext context) {
+
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
@@ -32,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         return MultiBlocProvider(
           providers: [
             BlocProvider<BbcCubit>(
-              create: (context) => BbcCubit(dioHelper: dioHelper)..getBbcNews(),
+              create: (context) => di<BbcCubit>()..getBbcNews(),
             ),
           ],
           child: MaterialApp(
